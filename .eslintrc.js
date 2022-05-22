@@ -4,19 +4,6 @@ module.exports = {
     sourceType: 'module',
     ecmaVersion: 6
   },
-  overrides: [
-    {
-      files: ['*.vue'],
-      parser: "@babel/eslint-parser",
-      parserOptions: {
-        requireConfigFile: false
-      },
-      env: {
-        browser: true,
-        node: true
-      }
-    }
-  ],
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/recommended',
