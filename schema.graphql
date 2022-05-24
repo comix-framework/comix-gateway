@@ -1,0 +1,144 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type Category {
+  id: ID!
+  createdAt: Float!
+  updatedAt: Float!
+
+  """Tên thể loại"""
+  name: String!
+  slug: String!
+  content: String!
+}
+
+input CreateCategoryInput {
+  name: String!
+  content: String!
+}
+
+input CreateStoryInput {
+  name: String!
+  content: String = ""
+  avatar: String!
+  authors: String = ""
+  teams: String = ""
+  status: StoryStatus = ON_GOING
+  categories: [String!]
+}
+
+type Mutation {
+  categoryUpsert(input: CreateCategoryInput!): Category!
+  categoryUpdate(input: CreateCategoryInput!, category: String!): Category!
+  categoryRemove(category: String!): Category!
+  createStory(input: CreateStoryInput!): Story!
+  createUser(input: SignUpTdo!): User!
+  signIn(input: SignInTdo!): Token!
+  signUp(input: SignUpTdo!): Token!
+}
+
+type Query {
+  categories: [Category!]!
+  getMe: User!
+}
+
+enum Role {
+  USER
+  AUTHOR
+  ADMIN
+  SP_ADMIN
+}
+
+input SignInTdo {
+  """Email đăng ký"""
+  email: String!
+
+  """Mật khẩu tài khoản"""
+  password: String!
+}
+
+input SignUpTdo {
+  """Email đăng ký"""
+  email: String!
+
+  """Mật khẩu tài khoản"""
+  password: String!
+  name: String!
+}
+
+type Story {
+  id: ID!
+  name: String!
+  slug: String!
+  avatar: String!
+  content: String!
+  authors: String!
+  teams: String!
+  status: StoryStatus!
+  countViews: Int!
+  countComments: Int!
+  countRating: Int!
+  totalRating: Int!
+  countBookmark: Int!
+  categories: [String!]!
+  createdAt: Float!
+  updatedAt: Float!
+}
+
+enum StoryStatus {
+  ON_GOING
+  END
+  DROP
+}
+
+type Token {
+  """JSON Web Token"""
+  token: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  slug: String!
+  role: Role!
+  avatar: String
+  createdAt: Float!
+}
